@@ -16,7 +16,7 @@ import java.security.Principal;
 // convert this class to a REST controller
 // only logged in users should have access to these actions
 @RestController
-// @RequestMapping("cart")
+@RequestMapping("cart")
 // only logged in users should have access to these actions
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 @CrossOrigin
@@ -34,7 +34,7 @@ public class ShoppingCartController {
     }
 
     // each method in this controller requires a Principal object as a parameter
-    @RequestMapping(path = "/cart", method = RequestMethod.GET)
+    @GetMapping
     public ShoppingCart getCart(Principal principal) {
         try {
             // get the currently logged in username
@@ -52,7 +52,7 @@ public class ShoppingCartController {
 
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added
-    @RequestMapping(path = "/cart/products/{productId}", method = RequestMethod.POST)
+    @PostMapping("/products/{productId}")
     public void addItemToCart(Principal principal, @PathVariable(name = "productId") int productId) {
 
         try {
@@ -82,7 +82,8 @@ public class ShoppingCartController {
 
     // add a DELETE method to clear all products from the current users cart
 // https://localhost:8080/cart
-    @DeleteMapping("{/cart}")
+    @DeleteMapping
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteItem(Principal principal){
         try{
             String userName = principal.getName();
@@ -91,6 +92,7 @@ public class ShoppingCartController {
             int userId = user.getId();
 
             // shoppingCartDao.deleteCart ?
+            shoppingCartDao.deleteItem(userId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
