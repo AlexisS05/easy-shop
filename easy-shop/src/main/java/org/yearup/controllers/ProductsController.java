@@ -91,6 +91,7 @@ public class ProductsController
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable int id)
     {
         try
